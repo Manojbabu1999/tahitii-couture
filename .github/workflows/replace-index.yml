@@ -1,0 +1,27 @@
+name: Replace index.html
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tahitii-couture-2.html'
+      - '.github/workflows/replace-index.yml'
+permissions:
+  contents: write
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace index.html with updated file
+        run: |
+          set -e
+          if [ ! -f tahitii-couture-2.html ]; then echo "No tahitii-couture-2.html, nothing to do"; exit 0; fi
+          cp tahitii-couture-2.html index.html
+          rm tahitii-couture-2.html
+          git config user.name "Manojbabu1999"
+          git config user.email "Manojbabu1999@users.noreply.github.com"
+          git add index.html tahitii-couture-2.html
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Fix overflow and paddy-field head crop"
+          git push
